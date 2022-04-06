@@ -24,7 +24,7 @@ function updater {
 function cleanup {
     Set-Location $HOME
     Clear-RecycleBin -Force
-    Write-Host "Recycle Bin cleaned."
+    Write-Host "Recycle Bin cleaned - Ignore the error. It works."
     Set-Location $HOME\Downloads
     Remove-Item -Recurse *
     Remove-Item c:\Windows\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
