@@ -22,12 +22,13 @@ function updater {
     }
 
 function cleanup {
-    Clear-RecycleBin -DriveLetter C -Force
+    Set-Location $HOME
+    Clear-RecycleBin -Force
+    Write-Host "Recycle Bin cleaned."
     Set-Location $HOME\Downloads
     Remove-Item -Recurse *
     Remove-Item c:\Windows\Temp\* -Recurse -Force -ErrorAction SilentlyContinue
     $PSScriptRoot
-#    cleanmgr /sagerun:1 | out-Null
     Start-Process -FilePath "C:\WINDOWS\system32\cleanmgr.exe" /sagerun:1 | Out-Null
     Wait-Process -Name cleanmgr
     Start-Process -FilePath "C:\Program Files (x86)\Wise\Wise Registry Cleaner\WiseRegCleaner.exe"
@@ -35,10 +36,12 @@ function cleanup {
 
 
 function common {
+    Write-Host "Updating Windows"
     updater
+    Write-Host "Cleaning up the system bloat"
     cleanup
     stateTogg
-    Exit-PSSession
+    Set-Location $HOME
 }
 
 Write-Output "Running common workload"
@@ -50,3 +53,6 @@ if (( $u -eq "mateusz" ) -and ( $mo -in $sched )) {
     Write-Output "running admin special"
     & "$PSScriptRoot\pwmaintenance.ps1"
     } else { Write-Output "Not now Madeline" }
+
+
+Stop-Process -Name powershell
