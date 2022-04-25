@@ -36,6 +36,9 @@ function cleanup {
 
 
 function common {
+    Write-Host "Updating the maintenance and security files"
+    Invoke-WebRequest -Uri https://github.com/schwastedotter/homegym/blob/main/zAdmin/tuneup.ps1 -OutFile 'C:\Program Files\zAdmin\tuneup.ps1'
+    #Invoke-WebRequest -Uri https://github.com/schwastedotter/homegym/blob/main/zAdmin/hosts -OutFile 'C:\Windows\System32\drivers\etc\hosts'
     Write-Host "Updating Windows"
     updater
     Write-Host "Cleaning up the system bloat"
