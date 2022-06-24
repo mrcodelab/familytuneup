@@ -57,7 +57,7 @@ function gitUpdater{
     try {
         Write-Host "Updating the maintenance and security files" -ForegroundColor Yellow
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/familytuneup/main/tuneup.ps1 -OutFile '$HOME\Downloads'
-        $zip1 = Get-FileHash -Algorithm SHA256 $HOME\Downloads\w10_pc_tuneup.ps1 | Select-Object -ExpandProperty Hash
+        $zip1 = Get-FileHash -Algorithm SHA256 $HOME\Downloads\tuneup.ps1 | Select-Object -ExpandProperty Hash
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/hashes/main/tuneup-hash.txt -OutFile '$HOME\Downloads'
         $hash1 = Get-Content $HOME\Downloads\tuneup-hash.txt
         if ( $zip1 -eq $hash1 ) {
