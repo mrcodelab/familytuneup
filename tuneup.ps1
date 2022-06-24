@@ -7,8 +7,17 @@ $b="C:\Program Files\zAdmin"
 $h = "C:\Windows\System32\drivers\etc\hosts"
 $mo=Get-Date -UFormat %b
 $sched = "Jan", "Mar", "May", "Jul", "Sep", "Nov"
-$task = Read-Host "Do you need a reboot (r) || shutdown(s) || keep awake(k)"
+Write-Host "You are running version $version of Spam Defender."
+$task = Read-Host "Do you need a reboot (r) OR shutdown(s) OR keep awake(k)"
 $task = $task.ToUpper()
+
+try {
+    # TODO: test to see if 'C:\Program Files\zAdmin' exists, if not, create the folder
+    # if !($b){ mkdir $b} else{pass}
+}
+catch {
+    {1:<#Do this if a terminating exception happens#>}
+}
 
 function msdtTest {
     try {
@@ -63,15 +72,20 @@ function gitUpdater{
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/pihole-g/main/hosts_hash.txt -OutFile '$HOME\Downloads'
         $hash2 = Get-Content $HOME\Downloads\hosts_hash.txt
         if ( $zip2 -eq $hash2 ) {
+            $ucheck = Get-FileHash -Algorithm SHA256 $h | Select-Object -ExpandProperty Hash
+            if ( $hash2 -ne $ucheck ) {
+                Write-Host "The hosts file has been updated. Please disable your antivirus and re-run spamdefender to get the latest filter."
+                Move-Item $Home\Downloads\hosts $h -ErrorAction SilentlyContinue
+            }
             Move-Item $Home\Downloads\hosts $h
             Write-Host "Hosts file updated." -ForegroundColor Green
         }
-        else { Write-Host "The host hash did not match!" -ForegroundColor Red }
+        else { Write-Host "The host hash did not match! The host file was not updated." -ForegroundColor Red }
     }
     catch {
+        Write-Host "Security file update blocked by antivirus. No biggie." -ForegroundColor White
         -ErrorAction SilentlyContinue
     }
-    Write-Host "Security file update blocked by antivirus. No biggie." -ForegroundColor White
 
 }
 
@@ -125,7 +139,7 @@ Write-Host "Running common workload" -ForegroundColor Yellow
 
 common
 
-$PSScriptRoot
+Write-Host "Thank you for using Spam Defender!"
 
 if (( $u -eq "mateusz" ) -and ( $mo -in $sched )) {
     Write-Host "running admin special" -ForegroundColor Yellow
