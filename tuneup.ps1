@@ -63,7 +63,7 @@ function gitUpdater{
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/hashes/main/tuneup-hash.txt -OutFile 'tuneup-hash.txt'
         $hash1 = Get-Content $HOME\Downloads\tuneup-hash.txt
         if ( $zip1 -eq $hash1 ) {
-            Move-Item tuneup.ps1 $b
+            Move-Item tuneup.ps1 $b -Force
             Write-Host "Tuneup file updated." -ForegroundColor Green
         }
         else { Write-Host "The tuneup hash did not match!" -ForegroundColor Red }
@@ -77,13 +77,15 @@ function gitUpdater{
         $zip2 = Get-FileHash -Algorithm SHA256 $HOME\Downloads\hosts | Select-Object -ExpandProperty Hash
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/hashes/main/hosts_hash.txt -OutFile 'hosts_hash.txt'
         $hash2 = Get-Content $HOME\Downloads\hosts_hash.txt
+        Write-Host $zip2
+        write-host $hash2
         if ( $zip2 -eq $hash2 ) {
             $ucheck = Get-FileHash -Algorithm SHA256 $h | Select-Object -ExpandProperty Hash
             if ( $hash2 -ne $ucheck ) {
                 Write-Host "The hosts file has been updated. Please disable your antivirus and re-run spamdefender to get the latest filter."
-                Move-Item $Home\Downloads\hosts $h -ErrorAction SilentlyContinue
+                Move-Item $Home\Downloads\hosts $h -Force -ErrorAction SilentlyContinue
             }
-            Move-Item $Home\Downloads\hosts $h
+            Move-Item $Home\Downloads\hosts $h -Force
             Write-Host "Hosts file updated." -ForegroundColor Green
         }
         else { Write-Host "The host hash did not match! The host file was not updated." -ForegroundColor Red }
