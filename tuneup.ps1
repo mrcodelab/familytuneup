@@ -1,6 +1,6 @@
 ﻿#version yyyy.mm.MAJ.MIN.r
-#version 2022.06.2.1.2
-$version = 202206.2.1.2
+#version 2022.06.2.1.3
+$version = "202206.2.1.3"
 $u=$env:UserName
 $c=$env:COMPUTERNAME
 Write-Output "Hi $u. "
@@ -56,10 +56,11 @@ function stateTogg {
 
 function gitUpdater{
     try {
+        Set-Location $HOME\Downloads
         Write-Host "Updating the maintenance and security files" -ForegroundColor Yellow
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/familytuneup/main/tuneup.ps1 -OutFile '$HOME\Downloads'
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/familytuneup/main/tuneup.ps1 -OutFile 'tuneup.ps1'
         $zip1 = Get-FileHash -Algorithm SHA256 $HOME\Downloads\tuneup.ps1 | Select-Object -ExpandProperty Hash
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/hashes/main/tuneup-hash.txt -OutFile '$HOME\Downloads'
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/hashes/main/tuneup-hash.txt -OutFile 'tuneup-hash.txt'
         $hash1 = Get-Content $HOME\Downloads\tuneup-hash.txt
         if ( $zip1 -eq $hash1 ) {
             Move-Item tuneup.ps1 $b
@@ -72,9 +73,9 @@ function gitUpdater{
     }
 
     try {
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/pihole-g/main/hosts -OutFile '$HOME\Downloads'
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/pihole-g/main/hosts -OutFile 'hosts'
         $zip2 = Get-FileHash -Algorithm SHA256 $HOME\Downloads\hosts | Select-Object -ExpandProperty Hash
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/hashes/main/hosts_hash.txt -OutFile '$HOME\Downloads'
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/mrcodelab/hashes/main/hosts_hash.txt -OutFile 'hosts_hash.txt'
         $hash2 = Get-Content $HOME\Downloads\hosts_hash.txt
         if ( $zip2 -eq $hash2 ) {
             $ucheck = Get-FileHash -Algorithm SHA256 $h | Select-Object -ExpandProperty Hash
